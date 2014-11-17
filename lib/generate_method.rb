@@ -3,22 +3,36 @@ require "generate_method/version"
 module GenerateMethod
   module Generator
     def generate_method(method_name, overrider: nil, &block)
+      include generate_method_module(method_name, overrider: overrider, &block)
+    end
+    def generate_singleton_method(method_name, overrider: nil, &block)
+      extend generate_method_module(method_name, overrider: overrider, &block)
+    end
+
+    def generate_methods(overrider: nil, &block)
+      include generate_block_module(overrider: overrider, &block)
+    end
+    def generate_singleton_methods(overrider: nil, &block)
+      extend generate_block_module(overrider: overrider, &block)
+    end
+
+    private
+
+    def generate_method_module(method_name, overrider: nil, &block)
       m = Module.new do
         define_method(method_name, &block)
       end
       alias_generated_method(method_name, overrider: overrider, m: m)
-      include m
+      m
     end
 
-    def generate_methods(overrider: nil, &block)
+    def generate_block_module(overrider: nil, &block)
       m = Module.new(&block)
       m.instance_methods.each do |method_name|
         alias_generated_method(method_name, overrider: overrider, m: m)
       end
-      include m
+      m
     end
-
-    private
 
     def alias_generated_method(method_name, overrider: nil, m: nil)
       return if overrider.nil?

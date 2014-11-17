@@ -58,6 +58,9 @@ class Module
 end
 ```
 
+To generate class method (singleton methods) you can use the equivalent
+`generate_singleton_method` and `generate_singleton_methods`.
+
 By using one of the above syntax, a few problems will be solved:
 
 ### Ancestors stack
@@ -85,7 +88,7 @@ instance.x
 You can add `overrider: <overrider_name>` option to the `generate_method` call. This will
 cause existing methods in the class to be aliased into
 `<method_name>_without_<overrider_name>` (pushing ?/!,= to the end of the
-method name). That way you can easily call the overriden method in your
+method name). That way you can easily call the overridden method in your
 generated method.
 
 ```ruby
